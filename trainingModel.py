@@ -46,11 +46,8 @@ r2 = r2_score(y_test, y_pred)
 print('Mean Squared Error:', mse)
 print('R-squared:', r2)
 
-# Calculate Residuals
-residuals = y_test - y_pred
-
-# Calculate the standard deviation of the residuals
-std_dev = np.std(residuals)
+# Calculate the standard deviation
+std_dev = np.std(y_pred)
 
 # Load the suspect data
 suspect_data = pandas.read_csv('Suspect_SWE_Data.csv')
@@ -66,6 +63,9 @@ suspect_data['day_of_year'] = suspect_data['date'].dt.dayofyear
 # Drop any rows with -9999
 suspect_data = suspect_data.drop(suspect_data[suspect_data==-9999].dropna(how='all').index)
 
+#Save the data with -9999 values removed
+suspect_data.to_csv('Modified_Unfiltered_Suspect_Data.csv', index=False)
+
 # Make predictions on the new data
 X_Suspect = suspect_data[['year', 'day_of_year', 'precip_cumulative', 'tmean']].values # Features
 y_Suspect = suspect_data['swe'].values # Target
@@ -73,10 +73,12 @@ y_suspect_pred = rf.predict(X_Suspect)
 
 # Filter out entries with residuals greater than 2 standard deviations
 suspect_measurements = suspect_data[np.abs(y_suspect_pred - y_Suspect) >= 2 * std_dev]
+# suspect_measurements = suspect_data[np.abs(y_suspect_pred - y_Suspect) >= 5 * std_dev]
 
 # Save the filtered data to a new file
 suspect_measurements.to_csv('suspect_measurements.csv', index=False)
 
 # Save the original data, except for the filtered entries, to a new file
 filtered_data = suspect_data[np.abs(y_suspect_pred - y_Suspect) < 2 * std_dev]
+# filtered_data = suspect_data[np.abs(y_suspect_pred - y_Suspect) < 5 * std_dev]
 filtered_data.to_csv('filtered_data.csv', index=False)
