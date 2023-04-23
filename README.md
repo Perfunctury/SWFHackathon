@@ -31,15 +31,25 @@ new CSV file named 'Modified_SWE_Training.csv'.
 # Step 3: Split the data
 The independent variables (features) and dependent variable (target) are separated from the cleaned data. 
 The independent variables are year, day_of_year, precip_cumulative, and tmean. The dependent variable is SWE. 
-The data is then split into training and testing sets using the train_test_split() function. The randome forest model
-is then created using the RandomForestRegressor() function from scikit-learn. The number of estimators is set to 100 
+The data is then split into training and testing sets using the train_test_split() function. The random forest model
+is then created using the RandomForestRegressor() function from scikit-learn. The number of estimators is set to 100,  
 and the random state is set to 42.
 
 # Step 4: Fit the model
-The model is fitted to the training data using the fit() function
+The model is trained on the training data using the 'fit' method. Predictions are made on the testing data 
+using the 'predict' method, and the model's performance is evaluated using mean squared error and R-squared.
+
+The standard deviation of the predicted values is calculated using NumPy's 'std' function.
+
+The suspect data is loaded from a CSV file named 'Suspect_SWE_Data.csv'. The date column is converted to a 
+datetime format, and new columns are added for the year and day of the year. Any rows containing the value 
+'-9999' are removed, and the modified data is saved to a new CSV file named 'Modified_Unfiltered_Suspect_Data.csv'.
 
 # Step 5: Make predictions
-The model is used to make predictions on the testing data using the predict() function.
+Predictions are made on the modified suspect data using the trained Random Forest Regressor model. 
+Any entries with residuals greater than 2 standard deviations are filtered out and saved to a new file named 
+'suspect_measurements.csv'. The original data, excluding the filtered entries, is saved to a new file named 
+'filtered_data.csv'.
 
 # Step 6: Performance evaluation
 The performance of the model is evaluated using the mean squared error (MSE) and R-squared (R2) values. 
