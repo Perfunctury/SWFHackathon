@@ -1,36 +1,47 @@
-# SFW Hackathon
-Description:
-The code is performing a linear regression analysis on Tuolomne Meadows to predict
-snow-water-equivalent based on weights: day-of-the-year, precipitation, and the daily-mean temperature.
+# SWF Hackathon
 
-First the code reads from the .csv dataset using pandas DataFrame. The weights are then converted too
-numerical values to be selected such that the snow-water-equivalent can be used for regression analysis.
+# Step 1: Import libraries
 
-The program then creates an empty list called "skipped_rows" to store the index of any rows with missing
-or invalid data such as "-9999" that appears in the assumed valid dataset. It then loops through each row
-in set DataFrame to check if, specifically "-9999" exist to be returned as null. Such that if it does contain
-the invalid value that row will be added to a skipped_rows list and continues to move onto the next row of data
+To begin executing the model, the following libraries will need to be imported
+1) pandas
+Used for data cleaning, exploration, manipulation, and overall analysis.
 
-If a row does contain the targeted invalid value(s) the rows get splits into training and testing using
-train_test_split() function from the library scikit-learn. The supervised learning ground is currently
-set to a standard of 20% to test/predict based on the sample amount 'n', where 'n' is currently set to 100.
+2) sklearn / scikit-learn
+An open-source machine learning library to train the model in Python that provides
+the tools and algorithms. Our model utilizes supervised learning for time-series forecasting.
+In this program, sklearn is used to calculate the accuracy of the model based on the mean squared error and R-squared score.
 
-Utilizing a scikit-learn library, the StandardScaler() function is used to standardize the data. Also, from
-scikit-learn the LinearRegression() function trains the linear regression model on the scaled training data.
-Thus allowing the model to make prediction based on the scaled testing data.
+Overall, scikit-learn is a powerful and versatile library for machine learning tasks in Python. 
+It is widely used in data science and machine learning projects and is known for its user-friendly 
+API and extensive documentation.
 
-The code then calculates the mean squared error and R2 score of the model using the mean_squared_error()
-and r2_score() functions from scikit-learn to print the metric to onto the console.
+3) datetime
+A built-in Python module that provides classes for working with dates and time. This allows the model to manipulate dates, 
+times, and intervals.
 
-Lastly a scatter plot is created used from matplotlib.
 
-# Validation
-The model's efficiency can be identified with factors. First, the 'mean squared error (MSE)' which represents 
-is a value that checks the average squared difference between the predicted values and the actual values.
-The MSE value represents the performance of the model. The greater the MSE value is equals a bad performance.
-Whereas, the lower the value means that the model is performing adequately.
+# Step 2: Load and clean data
 
-Secondly, is the R2 value which represents the coefficient of determination. A statistical measure that represents
-the proportion of the variance to the dependent variable being the SWE. An R2 score of 1 would indicate that the
-model explains all of the variance with the SWE. Whereas, a score of 0 would show that model does not explain
-any of the variance. If the model has a negative value, that indicates a destitute.
+Once all libraries and modules are imported data cleaning can begin by loading the data provided from a .csv file named
+'SWE_Training.csv' using the pandas read_csv() function. It then drops rows with -9999 value using drop() function, 
+and converts the date column to datetime format using to_datetime() function, and extracts year and cumulative day 
+of the year as new columns using dt.year and dt.dayofyear functions respectively. It then saves the cleaned data as a 
+new CSV file named 'Modified_SWE_Training.csv'.
+
+# Step 3: Split the data
+The independent variables (features) and dependent variable (target) are separated from the cleaned data. 
+The independent variables are year, day_of_year, precip_cumulative, and tmean. The dependent variable is SWE. 
+The data is then split into training and testing sets using the train_test_split() function. The randome forest model
+is then created using the RandomForestRegressor() function from scikit-learn. The number of estimators is set to 100 
+and the random state is set to 42.
+
+# Step 4: Fit the model
+The model is fitted to the training data using the fit() function
+
+# Step 5: Make predictions
+The model is used to make predictions on the testing data using the predict() function.
+
+# Step 6: Performance evaluation
+The performance of the model is evaluated using the mean squared error (MSE) and R-squared (R2) values. 
+The mean squared error is calculated using the mean_squared_error() function, and the R-squared value is 
+calculated using the r2_score() function. The values are then printed to the console using the print() function.
